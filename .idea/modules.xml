@@ -3,9 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/TheCamp.iml" filepath="$PROJECT_DIR$/.idea/TheCamp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app.test.iml" filepath="$PROJECT_DIR$/.idea/modules/app.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TheCamp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TheCamp.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.example.TheCamp.iml" filepath="$PROJECT_DIR$/.idea/modules/org.example.TheCamp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.example.TheCamp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.example.TheCamp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.example.TheCamp.test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.example.TheCamp.test.iml" />
     </modules>
   </component>
 </project>
