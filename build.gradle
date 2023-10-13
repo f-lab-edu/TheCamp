@@ -1,36 +1,35 @@
 buildscript {
-    ext{
-        springBootVersion = '3.1.2'
+    // ext : build.gradle 에서 사용 하는 전역 변수를 설정.
+    ext {
+        springBootVersion = '3.1.3'
     }
+    repositories { // 각종 의존성들을 어떤 원격 저장소에서 받을지 contact
+        mavenCentral()
+    }
+    dependencies {
+        // springBoot gradle plugin 3.1.3 RELEASE를 의존성으로 받음.
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.3.RELEASE"
+    }
+}
+
+subprojects {
+    group 'com.reservation.camping'
+    version '1.0'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 17
+
     repositories {
         mavenCentral()
-        jcenter()
     }
-    dependencies{
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:1.1.2.RELEASE"
-    }
+
 }
 
-plugins {
-    id 'java'
-    id 'eclipse'
-    id 'org.springframework.boot' version '3.1.2'
-    id 'io.spring.dependency-management' version '1.1.2'
-}
-
-group = 'com.reservation.camping'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    annotationProcessor 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+project(':app') {
+    bootJar.enabled = false
+    jar.enabled = true
 }
