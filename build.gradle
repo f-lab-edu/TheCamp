@@ -1,35 +1,38 @@
-buildscript {
-    // ext : build.gradle 에서 사용 하는 전역 변수를 설정.
-    ext {
-        springBootVersion = '3.1.3'
-    }
-    repositories { // 각종 의존성들을 어떤 원격 저장소에서 받을지 contact
-        mavenCentral()
-    }
-    dependencies {
-        // springBoot gradle plugin 3.1.3 RELEASE를 의존성으로 받음.
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:1.1.3.RELEASE"
-    }
+plugins {
+    id 'org.springframework.boot' version '3.1.3'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'java'
+}
+
+group = 'com.reservation.camping'
+version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = '17'
+
+repositories { // 각종 의존성들을 어떤 원격 저장소에서 받을지 contact
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 subprojects {
-    group 'com.reservation.camping'
-    version '1.0'
-
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
-    sourceCompatibility = 17
+    //sourceCompatibility = 17
 
     repositories {
         mavenCentral()
     }
 
-}
-
-project(':app') {
-    bootJar.enabled = false
-    jar.enabled = true
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
