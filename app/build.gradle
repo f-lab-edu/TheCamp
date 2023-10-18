@@ -1,0 +1,16 @@
+plugins {
+    id 'io.spring.dependency-management'
+    id 'java'
+    id 'org.springframework.boot'
+}
+
+// 각종 의존성들을 어떤 원격 저장소에서 받을지 contact 하는 역할을 수행.
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
