@@ -1,10 +1,11 @@
 plugins {
-    id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'java'
+    id 'org.springframework.boot'
 }
 
-repositories { // 각종 의존성들을 어떤 원격 저장소에서 받을지 contact
+// 각종 의존성들을 어떤 원격 저장소에서 받을지 contact 하는 역할을 수행.
+repositories {
     mavenCentral()
 }
 
