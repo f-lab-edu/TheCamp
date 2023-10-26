@@ -14,16 +14,16 @@ import java.util.Map;
 public class campsiteController {
 
     @GetMapping("/name")
-    public Map<String, List<String>> campsiteName() {
-        Map<String, List<String>> campSiteMap = new HashMap<>();
+    public Map<String, List<String>> getCampsiteName() {
+        Map<String, List<String>> campsiteMap = new HashMap<>();
         List<String> gangwondo = new ArrayList<>();
 
         gangwondo.add("원주 그린애캠핑장");
         gangwondo.add("원주 산노리캠핑장");
         gangwondo.add("한스캠핑장");
 
-        campSiteMap.put("원주", gangwondo);
+        campsiteMap.put("캠핑장", gangwondo);
 
-        return campSiteMap;
+        return campsiteMap;
     }
 }
