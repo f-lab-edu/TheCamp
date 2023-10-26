@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/campsite")
-public class campsiteController {
+public class CampsiteController {
 
     @GetMapping("/name")
     public Map<String, List<String>> getCampsiteName() {
