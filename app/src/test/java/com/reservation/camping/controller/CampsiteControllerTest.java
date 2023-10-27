@@ -21,7 +21,7 @@ class CampsiteControllerTest {
 
     @Test
     void getCampsiteName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/campsite/name"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/booking/campsiteList"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
     }
