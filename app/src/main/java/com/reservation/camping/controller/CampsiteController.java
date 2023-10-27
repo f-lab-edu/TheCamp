@@ -16,14 +16,16 @@ public class CampsiteController {
     @GetMapping("/campsiteList")
     public Map<String, List<String>> getCampsiteName() {
         Map<String, List<String>> campsiteMap = new HashMap<>();
-        List<String> gangwondo = new ArrayList<>();
+        List<String> campsiteList = new ArrayList<>();
 
-        gangwondo.add("원주 그린애캠핑장");
-        gangwondo.add("원주 산노리캠핑장");
-        gangwondo.add("한스캠핑장");
+        campsiteList.add("원주 그린애캠핑장");
+        campsiteList.add("원주 산노리캠핑장");
+        campsiteList.add("한스캠핑장");
 
-        campsiteMap.put("캠핑장", gangwondo);
+        campsiteMap.put("campsiteList", campsiteList);
 
         return campsiteMap;
     }
+
+    //    /booking/campsite/3598
 }
