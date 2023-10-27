@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/campsite")
+@RequestMapping("/booking")
 public class CampsiteController {
 
-    @GetMapping("/name")
+    @GetMapping("/campsiteList")
     public Map<String, List<String>> getCampsiteName() {
         Map<String, List<String>> campsiteMap = new HashMap<>();
         List<String> gangwondo = new ArrayList<>();
