@@ -19,9 +19,9 @@ public class CampsiteController {
         CampsiteInfo campsiteInfo = new CampsiteInfo();
         ReservationInfo reservationInfo = new ReservationInfo();
 
-        addressInfo.setAddress_name("강원도 영월군 무릉도원면 무릉법흥로 1078-9");
-        addressInfo.setRegion_1depth_name("강원도");
-        addressInfo.setRegion_2depth_name("영월군");
+        addressInfo.setAddressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9");
+        addressInfo.setRegion1DepthName("강원도");
+        addressInfo.setRegion2DepthName("영월군");
 
         reservationInfo.setName("영월 법흥계곡얼음골펜션");
         reservationInfo.setPriceRange("40000-40000");
