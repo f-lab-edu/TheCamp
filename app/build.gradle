@@ -9,14 +9,17 @@ repositories {
     mavenCentral()
 }
 
-test {
-    useJUnitPlatform()
-}
-
 dependencies {
+    annotationProcessor('org.projectlombok:lombok')
+    compileOnly('org.projectlombok:lombok')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.2')
     implementation('org.springframework.boot:spring-boot-starter')
     implementation('org.springframework.boot:spring-boot-starter-web')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+}
+
+test {
+    useJUnitPlatform()
 }
