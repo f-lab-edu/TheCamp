@@ -1,17 +1,21 @@
 package com.reservation.camping.controller;
 
+import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.AddressInfo;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.entity.ReservationInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/booking")
 public class CampsiteController {
+
+    private static Long reservationId = 0L;
+    private static Map<Long, CampsiteReservationDto> testDb = new HashMap<>();    // 임시 DB
 
     @GetMapping("/campsiteList")
     public CampsiteInfo getCampsiteList() {
@@ -28,10 +32,30 @@ public class CampsiteController {
         reservationInfo.setTelephone("033-374-8095");
         reservationInfo.setDescription("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다");
 
-        campsiteInfo.setReservationId("1");
+        campsiteInfo.setReservationId(1);
         campsiteInfo.setAddressInfo(addressInfo);
         campsiteInfo.setReservationInfo(reservationInfo);
 
         return campsiteInfo;
+    }
+
+    @PostMapping("/campsiteAdd")
+    public Map<Long, CampsiteReservationDto> addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
+        if (testDb.isEmpty()) {
+            campsiteReservationDto.setReservationId(reservationId);
+            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
+        } else {
+            campsiteReservationDto.setReservationId(++reservationId);
+            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
+        }
+        return testDb;
+    }
+
+    @PutMapping("/campsiteUpdate/{reservationId}")
+    public Map<Long, CampsiteReservationDto> updateCampsite(@PathVariable("reservationId") Long reservationId) {
+        CampsiteReservationDto campsiteReservationDto = testDb.get(reservationId);
+        campsiteReservationDto.setCampsiteName("영월 법흥계곡얼음골펜션 update");
+        testDb.put(reservationId, campsiteReservationDto);
+        return testDb;
     }
 }
