@@ -43,6 +43,6 @@ class CampsiteControllerTest {
 
         Long reservationId = campsiteInfo.getReservationId();
 
-        assertEquals("1", reservationId);
+        assertEquals(1, reservationId);
     }
 }
