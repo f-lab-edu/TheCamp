@@ -3,6 +3,7 @@ package com.reservation.camping.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,8 +32,18 @@ class CampsiteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private WebApplicationContext ctx;
+
+    @BeforeEach
+    public void setup() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
+                .alwaysDo(print())
+                .build();
+    }
 
     @Test
     void getCampsiteList() throws Exception {
@@ -67,12 +82,14 @@ class CampsiteControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/booking/campsiteAdd")
-                .contentType(MediaType.APPLICATION_JSON) // APPLICATION_JSON_UTF8를 명시하지 않아도 브라우저에서 잡아주기에 APPLICATION_JSON으로 충분하다.
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(content));
 
         // then
         resultActions
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(content))
                 .andDo(MockMvcResultHandlers.print());
     }
 }
