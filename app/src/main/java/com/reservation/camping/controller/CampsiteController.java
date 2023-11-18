@@ -40,15 +40,8 @@ public class CampsiteController {
     }
 
     @PostMapping("/campsiteAdd")
-    public Map<Long, CampsiteReservationDto> addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
-        if (testDb.isEmpty()) {
-            campsiteReservationDto.setReservationId(reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        } else {
-            campsiteReservationDto.setReservationId(++reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        }
-        return testDb;
+    public CampsiteReservationDto addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
+        return campsiteReservationDto;
     }
 
     @PutMapping("/campsiteUpdate/{reservationId}")
