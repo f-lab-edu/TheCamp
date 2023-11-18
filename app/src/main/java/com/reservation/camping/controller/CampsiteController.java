@@ -58,4 +58,10 @@ public class CampsiteController {
         testDb.put(reservationId, campsiteReservationDto);
         return testDb;
     }
+
+    @DeleteMapping("/campsiteDelete/{reservationId}")
+    public Map<Long, CampsiteReservationDto> deleteCampsite(@PathVariable("reservationId") Long reservationId) {
+        testDb.remove(reservationId);
+        return testDb;
+    }
 }

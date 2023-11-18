@@ -41,7 +41,7 @@ class CampsiteControllerTest {
 
         CampsiteInfo campsiteInfo = objectMapper.readValue(response.getContentAsString(), CampsiteInfo.class);
 
-        String reservationId = campsiteInfo.getReservationId();
+        Long reservationId = campsiteInfo.getReservationId();
 
         assertEquals("1", reservationId);
     }
