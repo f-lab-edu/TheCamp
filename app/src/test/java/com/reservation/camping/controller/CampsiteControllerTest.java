@@ -1,27 +1,27 @@
 package com.reservation.camping.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,29 +67,36 @@ class CampsiteControllerTest {
 
     @Test
     void addCampsite() throws Exception {
-        // given
-        CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
-                .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9")
-                .region1DepthName("강원도")
-                .region2DepthName("영월군")
-                .campsiteName("영월 법흥계곡얼음골펜션")
-                .priceRange("40000-40000")
-                .telephone("033-1111-2222")
-                .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
-                .build();
 
-        String content = new ObjectMapper().writeValueAsString(campsiteReservation);
-
-        // when
-        ResultActions resultActions = mockMvc.perform(post("/booking/campsiteAdd")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content));
-
-        // then
-        resultActions
+        MvcResult result = mockMvc.perform(post("/booking/campsiteAdd"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(content))
-                .andDo(MockMvcResultHandlers.print());
+                .andReturn();
+        Map<String, Object> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<String, Object>>() {});
+
+        assertEquals("캠핑장 등록 성공", response.get("response"));
+        assertNotNull(response.get("campsite"));
+    }
+
+    @Test
+    void updateCampsite() throws Exception {
+
+        MvcResult result = mockMvc.perform(put("/booking/campsiteUpdate"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Map<String, Object> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<String, Object>>() {});
+
+        assertEquals("캠핑장 수정 성공", response.get("response"));
+        assertNotNull(response.get("campsite"));
+    }
+
+    @Test
+    void deleteCampsite() throws Exception {
+
+        MvcResult result = mockMvc.perform(delete("/booking/campsiteDelete"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Map<String, Object> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<String, Object>>() {});
+
+        assertEquals("캠핑장 삭제 성공", response.get("response"));
     }
 }
