@@ -18,11 +18,10 @@ public class CampsiteController {
     private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
 
     // 어차피 Test 때만 tetDb를 사용하면 굳이 아래 코드는 필요 없지 않나?..  -> Test Code에서 필요하기 때문에 필요하다!
-    @Autowired
     public CampsiteController() {
         this(new HashMap<>());
     }
-
+    @Autowired
     public CampsiteController(Map<Long, CampsiteReservationDto> testDb) {
         this.testDb = testDb;
     }
