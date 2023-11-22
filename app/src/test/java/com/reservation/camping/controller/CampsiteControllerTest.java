@@ -6,7 +6,6 @@ import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -128,7 +127,6 @@ class CampsiteControllerTest {
                 .andReturn();
         Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
-//        assertThrows(NullPointerException.class, () -> n);
         assertEquals("영월 법흥계곡얼음골펜션 UPDATE", response.get(0L).getCampsiteName());
         assertNotNull(response.get(0L));
     }

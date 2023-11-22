@@ -17,7 +17,7 @@ public class CampsiteController {
     private static Long reservationId = 0L;
     private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
 
-    // 어차피 Test 때만 tetDb를 사용하면 굳이 아래 코드는 필요 없지 않나?..
+    // 어차피 Test 때만 tetDb를 사용하면 굳이 아래 코드는 필요 없지 않나?..  -> Test Code에서 필요하기 때문에 필요하다!
     @Autowired
     public CampsiteController() {
         this(new HashMap<>());
@@ -52,13 +52,11 @@ public class CampsiteController {
     @PostMapping("/campsiteAdd")
     public Map<Long, CampsiteReservationDto> addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
         if (testDb.isEmpty()) {
-            System.out.println("testDb 비어있음");
             campsiteReservationDto.setReservationId(reservationId);
             testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
         } else {
             campsiteReservationDto.setReservationId(++reservationId);
             testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-            System.out.println("testDb 비어있지않음 reservationId = {} " + reservationId);
         }
         return testDb;
     }
