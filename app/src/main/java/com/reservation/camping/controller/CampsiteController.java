@@ -4,16 +4,28 @@ import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.AddressInfo;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.entity.ReservationInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
+//@RequiredArgsConstructor
 @RestController
 @RequestMapping("/booking")
 public class CampsiteController {
-    private static Map<Long, CampsiteReservationDto> testDb = new HashMap<>();    // 임시 DB
+    private static Long reservationId = 0L;
+    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
+
+    // 어차피 Test 때만 tetDb를 사용하면 굳이 아래 코드는 필요 없지 않나?..
+    @Autowired
+    public CampsiteController() {
+        this(new HashMap<>());
+    }
+
+    public CampsiteController(Map<Long, CampsiteReservationDto> testDb) {
+        this.testDb = testDb;
+    }
 
     @GetMapping("/campsiteList")
     public CampsiteInfo getCampsiteList() {
@@ -38,52 +50,36 @@ public class CampsiteController {
     }
 
     @PostMapping("/campsiteAdd")
-    public Map<String, Object> addCampsite() {
-        Map<String, Object> response = new HashMap<>();
-
-        CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
-                .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9")
-                .region1DepthName("강원도")
-                .region2DepthName("영월군")
-                .campsiteName("영월 법흥계곡얼음골펜션")
-                .priceRange("40000-40000")
-                .telephone("033-1111-2222")
-                .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
-                .build();
-
-        response.put("response", "캠핑장 등록 성공");
-        response.put("campsite", campsiteReservation);
-
-        return response;
+    public Map<Long, CampsiteReservationDto> addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
+        if (testDb.isEmpty()) {
+            System.out.println("testDb 비어있음");
+            campsiteReservationDto.setReservationId(reservationId);
+            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
+        } else {
+            campsiteReservationDto.setReservationId(++reservationId);
+            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
+            System.out.println("testDb 비어있지않음 reservationId = {} " + reservationId);
+        }
+        return testDb;
     }
 
-//    @PutMapping("/campsiteUpdate/{reservationId}")
-    @PutMapping("/campsiteUpdate")
-    public Map<String, Object> updateCampsite() {
-        Map<String, Object> response = new HashMap<>();
-
-        CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
-                .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9 UPDATE")
-                .region1DepthName("강원도 UPDATE")
-                .region2DepthName("영월군 UPDATE")
-                .campsiteName("영월 법흥계곡얼음골펜션 UPDATE")
-                .priceRange("40000-40000 UPDATE")
-                .telephone("033-1111-2222 UPDATE")
-                .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다 UPDATE")
-                .build();
-
-        response.put("response", "캠핑장 수정 성공");
-        response.put("campsite", campsiteReservation);
-
-        return response;
+    @PutMapping("/campsiteUpdate/{reservationId}")
+    public Map<Long, CampsiteReservationDto> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
+        if(null == testDb.get(reservationId)) {
+            throw new NullPointerException();
+        } else {
+            testDb.put(reservationId, campsiteReservationDto);
+        }
+        return testDb;
     }
 
-//    @DeleteMapping("/campsiteDelete/{reservationId}")
-    @DeleteMapping("/campsiteDelete")
-    public Map<String, Object> deleteCampsite() {
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("response", "캠핑장 삭제 성공");
-        return response;
+    @DeleteMapping("/campsiteDelete/{reservationId}")
+    public Map<Long, CampsiteReservationDto> deleteCampsite(@PathVariable("reservationId") Long reservationId) {
+        if(null == testDb.get(reservationId)) {
+            throw new NullPointerException();
+        } else {
+            testDb.remove(reservationId);
+        }
+        return testDb;
     }
 }
