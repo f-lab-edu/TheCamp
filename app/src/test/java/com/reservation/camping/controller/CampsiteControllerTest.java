@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = CampsiteController.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CampsiteControllerTest {
 
     @Autowired
@@ -48,6 +48,7 @@ class CampsiteControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("GET 방식 테스트")
     void getCampsiteList() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(get("/booking/campsiteList"))
@@ -61,8 +62,8 @@ class CampsiteControllerTest {
 
         assertEquals(1, reservationId);
     }
-
     @Test
+    @Order(2)
     @DisplayName("campsite 등록 테스트")
     void addCampsite() throws Exception {
         CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
@@ -87,8 +88,8 @@ class CampsiteControllerTest {
         assertEquals("영월 법흥계곡얼음골펜션", response.get(0L).getCampsiteName());
         assertNotNull(response.get(0L));
     }
-
     @Test
+    @Order(3)
     @DisplayName("campsite 수정 성공 테스트")
     void updateSuccessCampsite() throws Exception {
         CampsiteReservationDto addCampsiteReservation = CampsiteReservationDto.builder() // add dto
@@ -131,8 +132,8 @@ class CampsiteControllerTest {
         assertEquals("영월 법흥계곡얼음골펜션 UPDATE", response.get(0L).getCampsiteName());
         assertNotNull(response.get(0L));
     }
-
     @Test
+    @Order(4)
     @DisplayName("campsite 수정 실패 테스트")
     void updateFailedCampsite() throws Exception {
         CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
@@ -148,8 +149,8 @@ class CampsiteControllerTest {
         CampsiteController campsiteController = new CampsiteController();
         assertThrows(NullPointerException.class, () -> campsiteController.updateCampsite(0L, campsiteReservation));
     }
-
     @Test
+    @Order(5)
     @DisplayName("campsite 삭제 성공 테스트")
     void deleteSuccessCampsite() throws Exception {
         CampsiteReservationDto addCampsiteReservation = CampsiteReservationDto.builder() // add dto
@@ -177,8 +178,8 @@ class CampsiteControllerTest {
         Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
         assertNull(response.get(0L));
     }
-
     @Test
+    @Order(6)
     @DisplayName("campsite 삭제 실패 테스트")
     void deleteFailedCampsite() throws Exception {
         CampsiteController campsiteController = new CampsiteController();
