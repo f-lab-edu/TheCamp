@@ -21,6 +21,8 @@ public class CampsiteController {
     public CampsiteController() {
         this(new HashMap<>());
     }
+
+    @Autowired
     public CampsiteController(Map<Long, CampsiteReservationDto> testDb) {
         this.testDb = testDb;
     }
