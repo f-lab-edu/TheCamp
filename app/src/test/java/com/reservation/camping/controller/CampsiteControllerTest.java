@@ -28,15 +28,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = CampsiteController.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CampsiteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext ctx;
+
+    private Map<Long, CampsiteReservationDto> testDb;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -44,10 +46,11 @@ class CampsiteControllerTest {
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                 .alwaysDo(print())
                 .build();
+
+        this.testDb = new HashMap<>(); // 각 메서드 실행 전 testDb를 초기화 시켜 Controller의 testDb가 공유되지 않도록 함.
     }
 
     @Test
-    @Order(1)
     @DisplayName("GET 방식 테스트")
     void getCampsiteList() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(get("/booking/campsiteList"))
@@ -63,7 +66,6 @@ class CampsiteControllerTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("campsite 등록 테스트")
     void addCampsite() throws Exception {
         CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
@@ -83,14 +85,13 @@ class CampsiteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
-        assertEquals("영월 법흥계곡얼음골펜션", response.get(0L).getCampsiteName());
-        assertNotNull(response.get(0L));
+        assertEquals("영월 법흥계곡얼음골펜션", testDb.get(0L).getCampsiteName());
+        assertNotNull(testDb.get(0L));
     }
 
     @Test
-    @Order(3)
     @DisplayName("campsite 수정 성공 테스트")
     void updateSuccessCampsite() throws Exception {
         CampsiteReservationDto addCampsiteReservation = CampsiteReservationDto.builder() // add dto
@@ -127,14 +128,13 @@ class CampsiteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
-        assertEquals("영월 법흥계곡얼음골펜션 UPDATE", response.get(0L).getCampsiteName());
-        assertNotNull(response.get(0L));
+        assertEquals("영월 법흥계곡얼음골펜션 UPDATE", testDb.get(0L).getCampsiteName());
+        assertNotNull(testDb.get(0L));
     }
 
     @Test
-    @Order(4)
     @DisplayName("campsite 수정 실패 테스트")
     void updateFailedCampsite() throws Exception {
         CampsiteReservationDto campsiteReservation = CampsiteReservationDto.builder()
@@ -152,7 +152,6 @@ class CampsiteControllerTest {
     }
 
     @Test
-    @Order(5)
     @DisplayName("campsite 삭제 성공 테스트")
     void deleteSuccessCampsite() throws Exception {
         CampsiteReservationDto addCampsiteReservation = CampsiteReservationDto.builder() // add dto
@@ -167,22 +166,16 @@ class CampsiteControllerTest {
 
         String addContent = new ObjectMapper().writeValueAsString(addCampsiteReservation);
 
-        mockMvc.perform(post("/booking/campsiteAdd")
-                        .content(addContent)
+        MvcResult deleteResult = mockMvc.perform(delete("/booking/campsiteDelete/0")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-
-        MvcResult result = mockMvc.perform(delete("/booking/campsiteDelete/0")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
-        assertNull(response.get(0L));
+        testDb = objectMapper.readValue(deleteResult.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        System.out.println("response test : " + testDb);
+        assertNull(testDb.get(0L));
     }
 
     @Test
-    @Order(6)
     @DisplayName("campsite 삭제 실패 테스트")
     void deleteFailedCampsite() throws Exception {
         CampsiteController campsiteController = new CampsiteController();
