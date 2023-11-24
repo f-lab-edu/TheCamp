@@ -85,6 +85,7 @@ class CampsiteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
+
         testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertEquals("영월 법흥계곡얼음골펜션", testDb.get(0L).getCampsiteName());
@@ -128,6 +129,7 @@ class CampsiteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
+
         testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertEquals("영월 법흥계곡얼음골펜션 UPDATE", testDb.get(0L).getCampsiteName());
@@ -171,7 +173,7 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         testDb = objectMapper.readValue(deleteResult.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
-        System.out.println("response test : " + testDb);
+
         assertNull(testDb.get(0L));
     }
 
