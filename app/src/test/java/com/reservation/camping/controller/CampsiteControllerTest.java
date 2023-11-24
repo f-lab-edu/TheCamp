@@ -61,6 +61,7 @@ class CampsiteControllerTest {
 
         assertEquals(1, reservationId);
     }
+
     @Test
     @Order(2)
     @DisplayName("campsite 등록 테스트")
@@ -87,6 +88,7 @@ class CampsiteControllerTest {
         assertEquals("영월 법흥계곡얼음골펜션", response.get(0L).getCampsiteName());
         assertNotNull(response.get(0L));
     }
+
     @Test
     @Order(3)
     @DisplayName("campsite 수정 성공 테스트")
@@ -130,6 +132,7 @@ class CampsiteControllerTest {
         assertEquals("영월 법흥계곡얼음골펜션 UPDATE", response.get(0L).getCampsiteName());
         assertNotNull(response.get(0L));
     }
+
     @Test
     @Order(4)
     @DisplayName("campsite 수정 실패 테스트")
@@ -147,6 +150,7 @@ class CampsiteControllerTest {
         CampsiteController campsiteController = new CampsiteController();
         assertThrows(NullPointerException.class, () -> campsiteController.updateCampsite(0L, campsiteReservation));
     }
+
     @Test
     @Order(5)
     @DisplayName("campsite 삭제 성공 테스트")
@@ -176,6 +180,7 @@ class CampsiteControllerTest {
         Map<Long, CampsiteReservationDto> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
         assertNull(response.get(0L));
     }
+
     @Test
     @Order(6)
     @DisplayName("campsite 삭제 실패 테스트")
