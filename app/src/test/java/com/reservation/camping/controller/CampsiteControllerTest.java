@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
+import com.reservation.camping.service.CampsiteService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -33,6 +35,9 @@ class CampsiteControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private CampsiteService campsiteService;
+
     @Autowired
     private WebApplicationContext ctx;
 
@@ -57,6 +62,8 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
+
+        System.out.println("response : " + response);
 
         CampsiteInfo campsiteInfo = objectMapper.readValue(response.getContentAsString(), CampsiteInfo.class);
 
@@ -149,7 +156,7 @@ class CampsiteControllerTest {
                 .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
                 .build();
 
-        CampsiteController campsiteController = new CampsiteController();
+        CampsiteController campsiteController = new CampsiteController(testDb);
         assertThrows(NullPointerException.class, () -> campsiteController.updateCampsite(0L, campsiteReservation));
     }
 
@@ -180,7 +187,7 @@ class CampsiteControllerTest {
     @Test
     @DisplayName("campsite 삭제 실패 테스트")
     void deleteFailedCampsite() throws Exception {
-        CampsiteController campsiteController = new CampsiteController();
+        CampsiteController campsiteController = new CampsiteController(testDb);
         assertThrows(NullPointerException.class, () -> campsiteController.deleteCampsite(0L));
     }
 }
