@@ -15,7 +15,6 @@ public class CampsiteController {
 
     private CampsiteService campsiteService;
 
-    // test
     private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
 
     public CampsiteController() {
@@ -27,16 +26,11 @@ public class CampsiteController {
         this.testDb = testDb;
     }
 
-    // ---------------
-
     @Autowired
     public void setCampsiteService(CampsiteService campsiteService) {
         this.campsiteService = campsiteService;
     }
-//    @Autowired
-//    public CampsiteController(CampsiteService campsiteService) {
-//        this.campsiteService = campsiteService;
-//    }
+
 
     @GetMapping("/campsiteList")
     public CampsiteInfo getCampsiteList() {
