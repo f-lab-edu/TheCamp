@@ -4,6 +4,7 @@ import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.AddressInfo;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.entity.ReservationInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,7 +15,16 @@ public class CampsiteServiceImpl implements  CampsiteService {
 
     private static Long reservationId = 0L;
 
-    private final Map<Long, CampsiteReservationDto> testDb = new HashMap<>();    // 임시 DB
+    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
+
+    public CampsiteServiceImpl() {
+        this(new HashMap<>());
+    }
+
+    @Autowired
+    public CampsiteServiceImpl(Map<Long, CampsiteReservationDto> testDb) {
+        this.testDb = testDb;
+    }
 
     @Override
     public CampsiteInfo getCampsiteList() {

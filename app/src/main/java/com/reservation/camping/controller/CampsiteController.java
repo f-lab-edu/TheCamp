@@ -15,22 +15,10 @@ public class CampsiteController {
 
     private CampsiteService campsiteService;
 
-    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
-
-    public CampsiteController() {
-        this(new HashMap<>());
-    }
-
-    @Autowired
-    public CampsiteController(Map<Long, CampsiteReservationDto> testDb) {
-        this.testDb = testDb;
-    }
-
     @Autowired
     public void setCampsiteService(CampsiteService campsiteService) {
         this.campsiteService = campsiteService;
     }
-
 
     @GetMapping("/campsiteList")
     public CampsiteInfo getCampsiteList() {

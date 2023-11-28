@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.service.CampsiteService;
+import com.reservation.camping.service.CampsiteServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -93,6 +94,8 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        assertNotNull(result.getResponse().getContentAsString());
+
         testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertEquals("영월 법흥계곡얼음골펜션", testDb.get(0L).getCampsiteName());
@@ -156,8 +159,9 @@ class CampsiteControllerTest {
                 .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
                 .build();
 
-        CampsiteController campsiteController = new CampsiteController(testDb);
-        assertThrows(NullPointerException.class, () -> campsiteController.updateCampsite(0L, campsiteReservation));
+//        CampsiteController campsiteController = new CampsiteController(testDb);
+        campsiteService = new CampsiteServiceImpl(testDb);
+        assertThrows(NullPointerException.class, () -> campsiteService.updateCampsite(0L, campsiteReservation));
     }
 
     @Test
@@ -187,7 +191,8 @@ class CampsiteControllerTest {
     @Test
     @DisplayName("campsite 삭제 실패 테스트")
     void deleteFailedCampsite() throws Exception {
-        CampsiteController campsiteController = new CampsiteController(testDb);
-        assertThrows(NullPointerException.class, () -> campsiteController.deleteCampsite(0L));
+//        CampsiteController campsiteController = new CampsiteController(testDb);
+        campsiteService = new CampsiteServiceImpl(testDb);
+        assertThrows(NullPointerException.class, () -> campsiteService.deleteCampsite(0L));
     }
 }
