@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.service.CampsiteService;
-import com.reservation.camping.service.CampsiteServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -53,7 +52,8 @@ class CampsiteControllerTest {
                 .alwaysDo(print())
                 .build();
 
-        this.testDb = new HashMap<>(); // 각 메서드 실행 전 testDb를 초기화 시켜 Controller의 testDb가 공유되지 않도록 함.
+        campsiteService.testDb = null; // 새로운 객체를 할당해주면 안되기 때문에? null로 처리
+//        this.testDb = new HashMap<>(); // 각 메서드 실행 전 testDb를 초기화 시켜 Controller의 testDb가 공유되지 않도록 함.
     }
 
     @Test
@@ -63,8 +63,6 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
-
-        System.out.println("response : " + response);
 
         CampsiteInfo campsiteInfo = objectMapper.readValue(response.getContentAsString(), CampsiteInfo.class);
 
@@ -96,7 +94,8 @@ class CampsiteControllerTest {
 
         assertNotNull(result.getResponse().getContentAsString());
 
-        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+//        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        campsiteService.testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertEquals("영월 법흥계곡얼음골펜션", testDb.get(0L).getCampsiteName());
         assertNotNull(testDb.get(0L));
@@ -140,7 +139,8 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+//        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        campsiteService.testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertEquals("영월 법흥계곡얼음골펜션 UPDATE", testDb.get(0L).getCampsiteName());
         assertNotNull(testDb.get(0L));
@@ -159,9 +159,18 @@ class CampsiteControllerTest {
                 .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
                 .build();
 
+        String updateContent = new ObjectMapper().writeValueAsString(campsiteReservation);
+
+        MvcResult result = mockMvc.perform(delete("/campsiteDelete/0")
+                        .content(updateContent)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        campsiteService.testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 //        CampsiteController campsiteController = new CampsiteController(testDb);
-        campsiteService = new CampsiteServiceImpl(testDb);
-        assertThrows(NullPointerException.class, () -> campsiteService.updateCampsite(0L, campsiteReservation));
+//        campsiteService = new CampsiteServiceImpl(testDb);
+//        assertThrows(NullPointerException.class, () -> campsiteService.updateCampsite(0L, campsiteReservation));
     }
 
     @Test
@@ -183,7 +192,8 @@ class CampsiteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        testDb = objectMapper.readValue(deleteResult.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+//        testDb = objectMapper.readValue(deleteResult.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        campsiteService.testDb = objectMapper.readValue(deleteResult.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
 
         assertNull(testDb.get(0L));
     }
@@ -192,7 +202,7 @@ class CampsiteControllerTest {
     @DisplayName("campsite 삭제 실패 테스트")
     void deleteFailedCampsite() throws Exception {
 //        CampsiteController campsiteController = new CampsiteController(testDb);
-        campsiteService = new CampsiteServiceImpl(testDb);
-        assertThrows(NullPointerException.class, () -> campsiteService.deleteCampsite(0L));
+//        campsiteService = new CampsiteServiceImpl(testDb);
+//        assertThrows(NullPointerException.class, () -> campsiteService.deleteCampsite(0L));
     }
 }

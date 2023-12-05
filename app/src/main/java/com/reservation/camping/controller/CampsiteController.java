@@ -3,22 +3,18 @@ package com.reservation.camping.controller;
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.service.CampsiteService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/booking")
+@AllArgsConstructor
 public class CampsiteController {
 
-    private CampsiteService campsiteService;
-
-    @Autowired
-    public void setCampsiteService(CampsiteService campsiteService) {
-        this.campsiteService = campsiteService;
-    }
+    private final CampsiteService campsiteService;
 
     @GetMapping("/campsiteList")
     public CampsiteInfo getCampsiteList() {
