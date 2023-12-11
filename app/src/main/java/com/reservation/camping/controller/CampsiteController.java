@@ -1,13 +1,13 @@
 package com.reservation.camping.controller;
 
 import com.reservation.camping.dto.CampsiteReservationDto;
+import com.reservation.camping.dto.ErrorResponseDto;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.service.CampsiteService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -29,12 +29,22 @@ public class CampsiteController {
     }
 
     @PutMapping("/campsiteUpdate/{reservationId}")
-    public Map<Long, CampsiteReservationDto> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
-        return campsiteService.updateCampsite(reservationId, campsiteReservationDto);
+    public ResponseEntity<Object> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
+        try {
+            Map<Long, CampsiteReservationDto> result = campsiteService.updateCampsite(reservationId, campsiteReservationDto);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
+        }
     }
 
     @DeleteMapping("/campsiteDelete/{reservationId}")
-    public Map<Long, CampsiteReservationDto> deleteCampsite(@PathVariable("reservationId") Long reservationId) {
-        return campsiteService.deleteCampsite(reservationId);
+    public ResponseEntity<Object> deleteCampsite(@PathVariable Long reservationId) {
+        try {
+            Map<Long, CampsiteReservationDto> result = campsiteService.deleteCampsite(reservationId);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
+        }
     }
 }

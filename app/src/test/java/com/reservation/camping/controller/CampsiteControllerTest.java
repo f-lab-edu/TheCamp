@@ -3,14 +3,11 @@ package com.reservation.camping.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
-import com.reservation.camping.entity.AddressInfo;
 import com.reservation.camping.entity.CampsiteInfo;
-import com.reservation.camping.entity.ReservationInfo;
-import com.reservation.camping.service.CampsiteService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,15 +19,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -134,7 +127,9 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        MvcResult result = mockMvc.perform(put("/booking/campsiteUpdate/0")
+        Long test = 0L;
+
+        MvcResult result = mockMvc.perform(put("/booking/campsiteUpdate/1")
                         .content(updateContent)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -170,14 +165,8 @@ class CampsiteControllerTest {
         MvcResult result = mockMvc.perform(put("/booking/campsiteUpdate/1")
                         .content(updateContent)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isBadRequest()) // 400 Error 확인
                 .andReturn();
-
-        // IllegalArgumentException이 발생했는지 검증
-        Exception resolvedException = result.getResolvedException();
-        assertNotNull(resolvedException);
-        assertEquals(IllegalArgumentException.class, resolvedException.getClass());
-        assertEquals("Invalid Reservation ID", resolvedException.getMessage());
     }
 
     @Test
@@ -195,6 +184,12 @@ class CampsiteControllerTest {
 
         String addContent = new ObjectMapper().writeValueAsString(addCampsiteReservation);
 
+        mockMvc.perform(post("/booking/campsiteAdd")
+                        .content(addContent)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
         MvcResult deleteResult = mockMvc.perform(delete("/booking/campsiteDelete/0")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -209,30 +204,7 @@ class CampsiteControllerTest {
     void deleteFailedCampsite() throws Exception {
         MvcResult result = mockMvc.perform(delete("/booking/campsiteDelete/0")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest()) // 400 Error 확인
                 .andReturn();
     }
-
-
-
-//    private CampsiteInfo createCampsiteInfo() {
-//        AddressInfo addressInfo = new AddressInfo();
-//        CampsiteInfo campsiteInfo = new CampsiteInfo();
-//        ReservationInfo reservationInfo = new ReservationInfo();
-//
-//        addressInfo.setAddressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9");
-//        addressInfo.setRegion1DepthName("강원도");
-//        addressInfo.setRegion2DepthName("영월군");
-//
-//        reservationInfo.setName("영월 법흥계곡얼음골펜션");
-//        reservationInfo.setPriceRange("40000-40000");
-//        reservationInfo.setTelephone("033-374-8095");
-//        reservationInfo.setDescription("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다");
-//
-//        campsiteInfo.setReservationId(1);
-//        campsiteInfo.setAddressInfo(addressInfo);
-//        campsiteInfo.setReservationInfo(reservationInfo);
-//
-//        return campsiteInfo;
-//    }
 }
