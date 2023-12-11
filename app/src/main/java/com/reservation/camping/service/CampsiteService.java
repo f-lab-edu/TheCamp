@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -16,8 +17,11 @@ public class CampsiteService {
 
     private static Long reservationId = 0L;
 
-//    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
-    public Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
+    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
+
+    public CampsiteService() {
+        this(new HashMap<>());
+    }
 
     public CampsiteInfo getCampsiteList() {
         AddressInfo addressInfo = new AddressInfo();
@@ -53,7 +57,7 @@ public class CampsiteService {
 
     public Map<Long, CampsiteReservationDto> updateCampsite(Long reservationId, CampsiteReservationDto campsiteReservationDto) {
         if(null == testDb.get(reservationId)) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException("Invalid Reservation ID");
         } else {
             testDb.put(reservationId, campsiteReservationDto);
         }
@@ -62,10 +66,11 @@ public class CampsiteService {
 
     public Map<Long, CampsiteReservationDto> deleteCampsite(Long reservationId) {
         if(null == testDb.get(reservationId)) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException("Invalid Reservation ID");
         } else {
             testDb.remove(reservationId);
         }
         return testDb;
     }
+
 }
