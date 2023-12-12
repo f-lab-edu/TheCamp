@@ -127,8 +127,6 @@ class CampsiteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Long test = 0L;
-
         MvcResult result = mockMvc.perform(put("/booking/campsiteUpdate/1")
                         .content(updateContent)
                         .contentType(MediaType.APPLICATION_JSON))
