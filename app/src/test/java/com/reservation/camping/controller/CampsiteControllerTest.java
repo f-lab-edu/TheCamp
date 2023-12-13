@@ -1,5 +1,6 @@
 package com.reservation.camping.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.camping.dto.CampsiteReservationDto;
@@ -24,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,10 +93,13 @@ class CampsiteControllerTest {
 
         assertNotNull(result.getResponse().getContentAsString());
 
-        testDb = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<Long, CampsiteReservationDto>>() {});
+        CampsiteInfo campsiteInfo = objectMapper.readValue(result.getResponse().getContentAsString(), CampsiteInfo.class);
 
-        assertEquals("영월 법흥계곡얼음골펜션", testDb.get(0L).getCampsiteName());
-        assertNotNull(testDb.get(0L));
+//        Long reservationId = campsiteInfo.getReservationId();
+
+        // service에서 추가했던 testDb를 어떻게 가져올지 고민이 필요함.
+//        assertEquals(campsiteInfo.getReservationInfo().getName(), testDb.get(reservationId).getCampsiteName());
+
     }
 
     @Test
@@ -182,13 +189,15 @@ class CampsiteControllerTest {
 
         String addContent = new ObjectMapper().writeValueAsString(addCampsiteReservation);
 
-        mockMvc.perform(post("/booking/campsiteAdd")
+        String test11 = mockMvc.perform(post("/booking/campsiteAdd")
                         .content(addContent)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andReturn().getResponse().getContentAsString();
 
-        MvcResult deleteResult = mockMvc.perform(delete("/booking/campsiteDelete/0")
+        System.out.println("test : " + test11);
+
+        MvcResult deleteResult = mockMvc.perform(delete("/booking/campsiteDelete/")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

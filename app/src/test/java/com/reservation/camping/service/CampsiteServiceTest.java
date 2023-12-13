@@ -1,6 +1,7 @@
 package com.reservation.camping.service;
 
 import com.reservation.camping.dto.CampsiteReservationDto;
+import com.reservation.camping.entity.CampsiteInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,25 +32,20 @@ class CampsiteServiceTest {
         CampsiteReservationDto campsiteReservationDto = createCampsiteReservationDto();
 
         // When
-        when(testDb.isEmpty()).thenReturn(true);
+        when(testDb.put(anyLong(), any())).thenReturn(campsiteReservationDto);
+//        when(testDb.put(anyLong(), eq(campsiteReservationDto))).thenReturn(campsiteReservationDto);
 
-        // Assuming createCampsiteReservationDto() returns an object with reservationId = 0L
-        when(testDb.put(anyLong(), eq(campsiteReservationDto))).thenReturn(campsiteReservationDto);
+        CampsiteInfo campsiteInfo = campsiteService.addCampsite(campsiteReservationDto);
 
-        Map<Long, CampsiteReservationDto> result = campsiteService.addCampsite(campsiteReservationDto);
+        assertEquals(campsiteReservationDto.getCampsiteName(), campsiteInfo.getReservationInfo().getName());
 
-        // Then
-        assertFalse(result.isEmpty());
-        assertTrue(result.containsKey(0L));
-
-        // Change this line to use the correct key (0L)
-        assertEquals(campsiteReservationDto, result.get(0L));
+        verify(testDb, times(1)).put(any(), any());
     }
 
     // ... (other test methods)
 
     private CampsiteReservationDto createCampsiteReservationDto() {
-        CampsiteReservationDto campsiteReservationDto = CampsiteReservationDto.builder() // add dto
+        return CampsiteReservationDto.builder() // add dto
                 .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9")
                 .region1DepthName("강원도")
                 .region2DepthName("영월군")
@@ -58,7 +54,5 @@ class CampsiteServiceTest {
                 .telephone("033-1111-2222")
                 .description("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다")
                 .build();
-
-        return campsiteReservationDto;
     }
 }

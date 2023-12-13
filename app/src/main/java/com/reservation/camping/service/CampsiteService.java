@@ -5,72 +5,74 @@ import com.reservation.camping.entity.AddressInfo;
 import com.reservation.camping.entity.CampsiteInfo;
 import com.reservation.camping.entity.ReservationInfo;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
+@RequiredArgsConstructor
 public class CampsiteService {
 
-    private static Long reservationId = 0L;
+    private Long reservationId = 0L;
 
-    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
+    private final Map<Long, CampsiteInfo> testDb;    // 임시 DB
 
+    @Autowired
     public CampsiteService() {
         this(new HashMap<>());
     }
 
-    public CampsiteInfo getCampsiteList() {
-        AddressInfo addressInfo = new AddressInfo();
+    public List<CampsiteInfo> getCampsiteList() {
+        return testDb.values().stream().toList();
+    }
+
+    public CampsiteInfo addCampsite(CampsiteReservationDto campsiteReservationDto) {
+        Long reservationId = this.reservationId++;
+
         CampsiteInfo campsiteInfo = new CampsiteInfo();
+        AddressInfo addressInfo = new AddressInfo();
         ReservationInfo reservationInfo = new ReservationInfo();
 
-        addressInfo.setAddressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9");
-        addressInfo.setRegion1DepthName("강원도");
-        addressInfo.setRegion2DepthName("영월군");
+        addressInfo.setAddressName(campsiteReservationDto.getAddressName());
+        addressInfo.setRegion1DepthName(campsiteReservationDto.getRegion1DepthName());
+        addressInfo.setRegion2DepthName(campsiteReservationDto.getRegion2DepthName());
 
-        reservationInfo.setName("영월 법흥계곡얼음골펜션");
-        reservationInfo.setPriceRange("40000-40000");
-        reservationInfo.setTelephone("033-374-8095");
-        reservationInfo.setDescription("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다");
+        reservationInfo.setDescription(campsiteReservationDto.getDescription());
+        reservationInfo.setName(campsiteReservationDto.getTelephone());
+        reservationInfo.setPriceRange(campsiteReservationDto.getPriceRange());
+        reservationInfo.setName(campsiteReservationDto.getCampsiteName());
 
-        campsiteInfo.setReservationId(1);
+        campsiteInfo.setReservationId(reservationId);
         campsiteInfo.setAddressInfo(addressInfo);
         campsiteInfo.setReservationInfo(reservationInfo);
+
+//        campsiteReservationDto.setReservationId(reservationId++);
+        testDb.put(campsiteReservationDto.getReservationId(), campsiteInfo);
 
         return campsiteInfo;
     }
 
-    public Map<Long, CampsiteReservationDto> addCampsite(CampsiteReservationDto campsiteReservationDto) {
-        if (testDb.isEmpty()) {
-            campsiteReservationDto.setReservationId(reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        } else {
-            campsiteReservationDto.setReservationId(++reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        }
-        return testDb;
-    }
-
-    public Map<Long, CampsiteReservationDto> updateCampsite(Long reservationId, CampsiteReservationDto campsiteReservationDto) {
-        if(null == testDb.get(reservationId)) {
-            throw new IllegalArgumentException("Invalid Reservation ID");
-        } else {
-            testDb.put(reservationId, campsiteReservationDto);
-        }
-        return testDb;
-    }
-
-    public Map<Long, CampsiteReservationDto> deleteCampsite(Long reservationId) {
-        if(null == testDb.get(reservationId)) {
-            throw new IllegalArgumentException("Invalid Reservation ID");
-        } else {
-            testDb.remove(reservationId);
-        }
-        return testDb;
-    }
+//    public Map<Long, CampsiteReservationDto> updateCampsite(Long reservationId, CampsiteReservationDto campsiteReservationDto) {
+//        if(null == testDb.get(reservationId)) {
+//            throw new IllegalArgumentException("Invalid Reservation ID");
+//        } else {
+//            testDb.put(reservationId, campsiteReservationDto);
+//        }
+//        return testDb;
+//    }
+//
+//    public Map<Long, CampsiteReservationDto> deleteCampsite(Long reservationId) {
+//        if(null == testDb.get(reservationId)) {
+//            throw new IllegalArgumentException("Invalid Reservation ID");
+//        } else {
+//            testDb.remove(reservationId);
+//        }
+//        return testDb;
+//    }
 
 }
