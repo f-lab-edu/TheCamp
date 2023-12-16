@@ -33,7 +33,6 @@ class CampsiteServiceTest {
 
         // When
         when(testDb.put(anyLong(), any())).thenReturn(campsiteReservationDto);
-//        when(testDb.put(anyLong(), eq(campsiteReservationDto))).thenReturn(campsiteReservationDto);
 
         CampsiteInfo campsiteInfo = campsiteService.addCampsite(campsiteReservationDto);
 

@@ -29,30 +29,23 @@ public class CampsiteController {
         return campsiteService.addCampsite(campsiteReservationDto);
     }
 
-//    @PutMapping("/campsiteUpdate/{reservationId}")
-//    public CampsiteInfo updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
-////        return campsiteService.
-//        CampsiteInfo campsiteInfo = new CampsiteInfo();
-//        return campsiteInfo;
-//    }
+    @PutMapping("/campsiteUpdate/{reservationId}")
+    public ResponseEntity<Object> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
+        try {
+            CampsiteInfo campsiteInfo = campsiteService.updateCampsite(reservationId, campsiteReservationDto);
+            return ResponseEntity.ok(campsiteInfo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
+        }
+    }
 
-//    @PutMapping("/campsiteUpdate/{reservationId}")
-//    public ResponseEntity<Object> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
-//        try {
-//            Map<Long, CampsiteReservationDto> result = campsiteService.updateCampsite(reservationId, campsiteReservationDto);
-//            return ResponseEntity.ok(result);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
-//        }
-//    }
-
-//    @DeleteMapping("/campsiteDelete/{reservationId}")
-//    public ResponseEntity<Object> deleteCampsite(@PathVariable Long reservationId) {
-//        try {
-//            Map<Long, CampsiteReservationDto> result = campsiteService.deleteCampsite(reservationId);
-//            return ResponseEntity.ok(result);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
-//        }
-//    }
+    @DeleteMapping("/campsiteDelete/{reservationId}")
+    public ResponseEntity<Object> deleteCampsite(@PathVariable Long reservationId) {
+        try {
+            Map<Long, CampsiteInfo> result = campsiteService.deleteCampsite(reservationId);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
+        }
+    }
 }
