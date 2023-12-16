@@ -1,5 +1,6 @@
 package com.reservation.camping.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

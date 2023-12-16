@@ -30,6 +30,13 @@ public class CampsiteController {
     }
 
 //    @PutMapping("/campsiteUpdate/{reservationId}")
+//    public CampsiteInfo updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
+////        return campsiteService.
+//        CampsiteInfo campsiteInfo = new CampsiteInfo();
+//        return campsiteInfo;
+//    }
+
+//    @PutMapping("/campsiteUpdate/{reservationId}")
 //    public ResponseEntity<Object> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
 //        try {
 //            Map<Long, CampsiteReservationDto> result = campsiteService.updateCampsite(reservationId, campsiteReservationDto);
@@ -38,7 +45,7 @@ public class CampsiteController {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
 //        }
 //    }
-//
+
 //    @DeleteMapping("/campsiteDelete/{reservationId}")
 //    public ResponseEntity<Object> deleteCampsite(@PathVariable Long reservationId) {
 //        try {

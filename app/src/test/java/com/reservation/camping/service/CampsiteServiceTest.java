@@ -37,7 +37,7 @@ class CampsiteServiceTest {
 
         CampsiteInfo campsiteInfo = campsiteService.addCampsite(campsiteReservationDto);
 
-        assertEquals(campsiteReservationDto.getCampsiteName(), campsiteInfo.getReservationInfo().getName());
+        assertEquals(campsiteReservationDto.getCampsiteName(), campsiteInfo.getReservationInfo().getCampsiteName());
 
         verify(testDb, times(1)).put(any(), any());
     }

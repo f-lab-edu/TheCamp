@@ -95,11 +95,9 @@ class CampsiteControllerTest {
 
         CampsiteInfo campsiteInfo = objectMapper.readValue(result.getResponse().getContentAsString(), CampsiteInfo.class);
 
-//        Long reservationId = campsiteInfo.getReservationId();
+        String campsiteName = campsiteInfo.getReservationInfo().getCampsiteName();
 
-        // service에서 추가했던 testDb를 어떻게 가져올지 고민이 필요함.
-//        assertEquals(campsiteInfo.getReservationInfo().getName(), testDb.get(reservationId).getCampsiteName());
-
+        assertEquals("영월 법흥계곡얼음골펜션", campsiteName);
     }
 
     @Test

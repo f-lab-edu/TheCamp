@@ -43,19 +43,36 @@ public class CampsiteService {
         addressInfo.setRegion2DepthName(campsiteReservationDto.getRegion2DepthName());
 
         reservationInfo.setDescription(campsiteReservationDto.getDescription());
-        reservationInfo.setName(campsiteReservationDto.getTelephone());
+        reservationInfo.setTelephone(campsiteReservationDto.getTelephone());
         reservationInfo.setPriceRange(campsiteReservationDto.getPriceRange());
-        reservationInfo.setName(campsiteReservationDto.getCampsiteName());
+        reservationInfo.setCampsiteName(campsiteReservationDto.getCampsiteName());
 
         campsiteInfo.setReservationId(reservationId);
         campsiteInfo.setAddressInfo(addressInfo);
         campsiteInfo.setReservationInfo(reservationInfo);
 
-//        campsiteReservationDto.setReservationId(reservationId++);
         testDb.put(campsiteReservationDto.getReservationId(), campsiteInfo);
 
         return campsiteInfo;
     }
+
+//    public CampsiteInfo updateCampsite(Long reservationId, CampsiteReservationDto campsiteReservationDto) {
+//        if(null == testDb.get(reservationId)) {
+//            throw new IllegalArgumentException("Invalid Reservation ID");
+//        } else {
+//            testDb.put(reservationId, campsiteReservationDto);
+//        }
+//        return testDb;
+//    }
+
+//    public Map<Long, CampsiteReservationDto> deleteCampsite(Long reservationId) {
+//        if(null == testDb.get(reservationId)) {
+//            throw new IllegalArgumentException("Invalid Reservation ID");
+//        } else {
+//            testDb.remove(reservationId);
+//        }
+//        return testDb;
+//    }
 
 //    public Map<Long, CampsiteReservationDto> updateCampsite(Long reservationId, CampsiteReservationDto campsiteReservationDto) {
 //        if(null == testDb.get(reservationId)) {
