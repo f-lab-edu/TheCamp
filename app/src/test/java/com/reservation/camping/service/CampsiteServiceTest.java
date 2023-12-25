@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,93 +28,58 @@ class CampsiteServiceTest {
     private CampsiteService campsiteService;
 
     @Test
+    void getCampsiteList() {
+        // When
+        List<CampsiteInfo> campsiteList = campsiteService.getCampsiteList();
+    }
+
+    @Test
     void addCampsite() {
         // Given
         CampsiteReservationDto campsiteReservationDto = createCampsiteReservationDto();
-
-        // When
         when(testDb.put(anyLong(), any())).thenReturn(campsiteReservationDto);
 
+        // When
         CampsiteInfo campsiteInfo = campsiteService.addCampsite(campsiteReservationDto);
 
+        // Then
         assertEquals(campsiteReservationDto.getCampsiteName(), campsiteInfo.getReservationInfo().getCampsiteName());
-
         verify(testDb, times(1)).put(any(), any());
     }
 
     @Test
-    void updateCampsite() { // 성공
+    void updateCampsite() {
         // Given
         CampsiteReservationDto createCampsiteReservationDto = createCampsiteReservationDto();
         CampsiteReservationDto updateCampsiteReservationDto = updateCampsiteReservationDto();
-
         when(testDb.get(anyLong())).thenReturn(createCampsiteReservationDto);
 
         // When
         CampsiteInfo updatedCampsiteInfo = campsiteService.updateCampsite(createCampsiteReservationDto.getReservationId(), updateCampsiteReservationDto);
 
-        System.out.println("test :" + updatedCampsiteInfo.getReservationInfo().getCampsiteName() + updateCampsiteReservationDto.getCampsiteName());
-
+        // Then
         assertNotNull(updatedCampsiteInfo);
         assertEquals(updateCampsiteReservationDto.getCampsiteName(), updatedCampsiteInfo.getReservationInfo().getCampsiteName());
         verify(testDb, times(1)).put(any(), any());
     }
 
-//    @Test
-//    void updateCampsite() { // 해당 방법은 실패
-//        // Given
-//        CampsiteReservationDto createCampsiteReservationDto = createCampsiteReservationDto();
-//        CampsiteReservationDto updateCampsiteReservationDto = updateCampsiteReservationDto();
-//
-//        // When
-//        when(testDb.put(anyLong(), any())).thenReturn(createCampsiteReservationDto);
-//        when(testDb.get(anyLong())).thenReturn(createCampsiteReservationDto); // Mock 객체에 get 메서드에 대한 동작을 설정
-//
-//        CampsiteInfo createCampsiteInfo = campsiteService.addCampsite(createCampsiteReservationDto);
-//        createCampsiteInfo.getReservationInfo().setCampsiteName("영월 법흥계곡얼음골펜션 UPDATE TEST~~");
-//
-//        // 테스트 코드에서 Mock 객체에 예상되는 동작을 설정
-//        when(campsiteService.updateCampsite(anyLong(), any())).thenReturn(createCampsiteInfo);
-//
-//    }
-
-//    @Test
-//    void updateCampsite() {
-//        // Given
-//        CampsiteReservationDto createCampsiteReservationDto = createCampsiteReservationDto();
-//        CampsiteReservationDto updateCampsiteReservationDto = updateCampsiteReservationDto();
-//
-//        // When
-//        when(testDb.put(anyLong(), any())).thenReturn(createCampsiteReservationDto);
-//
-//        CampsiteInfo createCampsiteInfo = campsiteService.addCampsite(createCampsiteReservationDto);
-//        createCampsiteInfo.getReservationInfo().setCampsiteName("영월 법흥계곡얼음골펜션 UPDATE TEST~~");
-//
-//        // 테스트 코드에서 null을 전달
-//        when(campsiteService.updateCampsite(anyLong(), updateCampsiteReservationDto)).thenReturn(createCampsiteInfo);
-//    }
-
     @Test
-    void updateCampsite1() {
+    void deleteCampsite() {
         // Given
         CampsiteReservationDto createCampsiteReservationDto = createCampsiteReservationDto();
-        CampsiteReservationDto updateCampsiteReservationDto = updateCampsiteReservationDto();
+        when(testDb.get(anyLong())).thenReturn(createCampsiteReservationDto);
+        when(testDb.remove(anyLong())).thenReturn(null);
 
         // When
-        when(testDb.get(anyLong())).thenReturn(createCampsiteReservationDto);
+        Map<Long, CampsiteInfo> result = campsiteService.deleteCampsite(createCampsiteReservationDto.getReservationId());
 
-        CampsiteInfo createCampsiteInfo = campsiteService.addCampsite(createCampsiteReservationDto);
-        createCampsiteInfo.getReservationInfo().setCampsiteName("영월 법흥계곡얼음골펜션 UPDATE TEST~~");
-
-        // 테스트 코드에서 null을 전달
-        when(campsiteService.updateCampsite(anyLong(), updateCampsiteReservationDto)).thenReturn(createCampsiteInfo);
-
-        assertEquals(createCampsiteInfo.getReservationInfo().getCampsiteName(), updateCampsiteReservationDto.getCampsiteName());
-        verify(testDb, times(1)).put(any(), any());
+        // Then
+        assertNotNull(result);
+        verify(testDb, times(1)).remove(createCampsiteReservationDto.getReservationId());
     }
 
     private CampsiteReservationDto createCampsiteReservationDto() {
-        return CampsiteReservationDto.builder() // add dto
+        return CampsiteReservationDto.builder()
                 .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9")
                 .region1DepthName("강원도")
                 .region2DepthName("영월군")
@@ -125,7 +91,7 @@ class CampsiteServiceTest {
     }
 
     private CampsiteReservationDto updateCampsiteReservationDto() {
-        return CampsiteReservationDto.builder() // add dto
+        return CampsiteReservationDto.builder()
                 .addressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9")
                 .region1DepthName("강원도")
                 .region2DepthName("영월군")
