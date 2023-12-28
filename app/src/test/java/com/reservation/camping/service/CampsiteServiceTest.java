@@ -2,17 +2,13 @@ package com.reservation.camping.service;
 
 import com.reservation.camping.dto.CampsiteReservationDto;
 import com.reservation.camping.entity.CampsiteInfo;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -29,8 +25,15 @@ class CampsiteServiceTest {
 
     @Test
     void getCampsiteList() {
+        // Given
+        when(testDb.values()).thenReturn(Collections.synchronizedCollection(new ArrayList<>()));
+
         // When
         List<CampsiteInfo> campsiteList = campsiteService.getCampsiteList();
+
+        // Then
+        assertNotNull(campsiteList);
+        verify(testDb, times(1)).values();
     }
 
     @Test
