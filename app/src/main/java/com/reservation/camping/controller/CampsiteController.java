@@ -1,82 +1,51 @@
 package com.reservation.camping.controller;
 
 import com.reservation.camping.dto.CampsiteReservationDto;
-import com.reservation.camping.entity.AddressInfo;
+import com.reservation.camping.dto.ErrorResponseDto;
 import com.reservation.camping.entity.CampsiteInfo;
-import com.reservation.camping.entity.ReservationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.reservation.camping.service.CampsiteService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-//@RequiredArgsConstructor
 @RestController
 @RequestMapping("/booking")
+@AllArgsConstructor
 public class CampsiteController {
-    private static Long reservationId = 0L;
-    private final Map<Long, CampsiteReservationDto> testDb;    // 임시 DB
 
-    public CampsiteController() {
-        this(new HashMap<>());
-    }
-
-    @Autowired
-    public CampsiteController(Map<Long, CampsiteReservationDto> testDb) {
-        this.testDb = testDb;
-    }
+    private final CampsiteService campsiteService;
 
     @GetMapping("/campsiteList")
-    public CampsiteInfo getCampsiteList() {
-        AddressInfo addressInfo = new AddressInfo();
-        CampsiteInfo campsiteInfo = new CampsiteInfo();
-        ReservationInfo reservationInfo = new ReservationInfo();
-
-        addressInfo.setAddressName("강원도 영월군 무릉도원면 무릉법흥로 1078-9");
-        addressInfo.setRegion1DepthName("강원도");
-        addressInfo.setRegion2DepthName("영월군");
-
-        reservationInfo.setName("영월 법흥계곡얼음골펜션");
-        reservationInfo.setPriceRange("40000-40000");
-        reservationInfo.setTelephone("033-374-8095");
-        reservationInfo.setDescription("법흥계곡에 위치한 아름다운 추억이 함께하는곳 계곡과 숲을 만끽할수있는 얼음골펜션입니다");
-
-        campsiteInfo.setReservationId(1);
-        campsiteInfo.setAddressInfo(addressInfo);
-        campsiteInfo.setReservationInfo(reservationInfo);
-
-        return campsiteInfo;
+    public List<CampsiteInfo> getCampsiteList() {
+        return campsiteService.getCampsiteList();
     }
 
     @PostMapping("/campsiteAdd")
-    public Map<Long, CampsiteReservationDto> addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
-        if (testDb.isEmpty()) {
-            campsiteReservationDto.setReservationId(reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        } else {
-            campsiteReservationDto.setReservationId(++reservationId);
-            testDb.put(campsiteReservationDto.getReservationId(), campsiteReservationDto);
-        }
-        return testDb;
+    public CampsiteInfo addCampsite(@RequestBody CampsiteReservationDto campsiteReservationDto) {
+        return campsiteService.addCampsite(campsiteReservationDto);
     }
 
     @PutMapping("/campsiteUpdate/{reservationId}")
-    public Map<Long, CampsiteReservationDto> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
-        if(null == testDb.get(reservationId)) {
-            throw new NullPointerException();
-        } else {
-            testDb.put(reservationId, campsiteReservationDto);
+    public ResponseEntity<Object> updateCampsite(@PathVariable("reservationId") Long reservationId, @RequestBody CampsiteReservationDto campsiteReservationDto) {
+        try {
+            CampsiteInfo campsiteInfo = campsiteService.updateCampsite(reservationId, campsiteReservationDto);
+            return ResponseEntity.ok(campsiteInfo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
         }
-        return testDb;
     }
 
     @DeleteMapping("/campsiteDelete/{reservationId}")
-    public Map<Long, CampsiteReservationDto> deleteCampsite(@PathVariable("reservationId") Long reservationId) {
-        if(null == testDb.get(reservationId)) {
-            throw new NullPointerException();
-        } else {
-            testDb.remove(reservationId);
+    public ResponseEntity<Object> deleteCampsite(@PathVariable Long reservationId) {
+        try {
+            Map<Long, CampsiteInfo> result = campsiteService.deleteCampsite(reservationId);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto("Invalid input"));
         }
-        return testDb;
     }
 }
